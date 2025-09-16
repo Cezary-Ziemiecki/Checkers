@@ -43,7 +43,7 @@ export default class CheckersGame implements Game {
         if (!this.board.movePiece(from.x, from.y, to.x, to.y)) return false;
         this.currentPlayer = this.currentPlayer === 1 ? 2 : 1;
         this.board.calcBoard();
-
+        this.stats.moves += 1;
         if (toPreviousPlayer !== null) {
             if (toPreviousPlayer === 1) {
                 this.stats.player1 -= 1;
