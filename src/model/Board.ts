@@ -46,9 +46,17 @@ export default class GameBoard implements Board {
                         for (let dx = -1; dx <= 1; dx += 1) {
                             const target = this.getSquare(x + dx, y + dy);
                             if (dx === 0 && dy === 0) continue;
-                            if (dx === 0) {
-                                if (square.selected && ((square.player === this.userPlayer && dy === 1) || (square.player === (3 - this.userPlayer) && dy === -1))) {
-                                    if (target && target.player === null) target.canMove = true;
+                                                        if (Math.abs(dx) === 1 && Math.abs(dy) === 1) {
+                                if (
+                                    square.selected &&
+                                    (
+                                        (square.player === this.userPlayer && dy === 1) ||
+                                        (square.player === (3 - this.userPlayer) && dy === -1)
+                                    )
+                                ) {
+                                    if (target && target.player === null) {
+                                        target.canMove = true;
+                                    }
                                 }
                             } else if (dy !== 0) {
                                 if (target && target.player !== null && target.player !== square.player) {
