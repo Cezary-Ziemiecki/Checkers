@@ -36,37 +36,46 @@ export default class GameBoard implements Board {
         if (x < 0 || x >= 8 || y < 0 || y >= 8) return null;
         return this.squares[y][x];
     }
+
+
     calcBoard(): void {
-        this.resetBoard()
-        for (let y = 0; y < 8; y++) {
-            for (let x = 0; x < 8; x++) {
-                const square: SingleSquare = this.getSquare(x, y)!;
-                if (square?.player !== null) {
-                    for (let dy = -1; dy <= 1; dy += 1) {
-                        for (let dx = -1; dx <= 1; dx += 1) {
-                            const target = this.getSquare(x + dx, y + dy);
-                            if (dx === 0 && dy === 0) continue;
-                                                        if (Math.abs(dx) === 1 && Math.abs(dy) === 1) {
-                                if (
-                                    square.selected &&
-                                    (
-                                        (square.player === this.userPlayer && dy === 1) ||
-                                        (square.player === (3 - this.userPlayer) && dy === -1)
-                                    )
-                                ) {
-                                    if (target && target.player === null) {
-                                        target.canMove = true;
-                                    }
-                                }
-                            } else if (dy !== 0) {
-                                if (target && target.player !== null && target.player !== square.player) {
-                                    const jumpX = x + dx * 2;
-                                    const jumpY = y + dy * 2;
-                                    const landingSquare = this.getSquare(jumpX, jumpY);
-                                    if (landingSquare && landingSquare.player === null) {
-                                        target.canBeat = true;
-                                    }
-                                }
+    this.resetBoard();
+
+    for (let y = 0; y < 8; y++) {
+        for (let x = 0; x < 8; x++) {
+            const square: SingleSquare = this.getSquare(x, y)!;
+            if (square?.player !== null) {
+                for (let dy = -1; dy <= 1; dy++) {
+                    for (let dx = -1; dx <= 1; dx++) {
+                        if (dx === 0 && dy === 0) continue;
+                        const target = this.getSquare(x + dx, y + dy);
+
+                        if (
+                            Math.abs(dx) === 1 &&
+                            Math.abs(dy) === 1 &&
+                            square.selected &&
+                            (
+                                (square.player === this.userPlayer && dy === 1) ||
+                                (square.player === (3 - this.userPlayer) && dy === -1)
+                            ) &&
+                            target &&
+                            target.player === null
+                        ) {
+                            target.canMove = true;
+                        }
+
+                        if (
+                            Math.abs(dx) === 1 &&
+                            Math.abs(dy) === 1 &&
+                            target &&
+                            target.player !== null &&
+                            target.player !== square.player
+                        ) {
+                            const jumpX = x + dx * 2;
+                            const jumpY = y + dy * 2;
+                            const landingSquare = this.getSquare(jumpX, jumpY);
+                            if (landingSquare && landingSquare.player === null) {
+                                target.canBeat = true;
                             }
                         }
                     }
@@ -74,6 +83,10 @@ export default class GameBoard implements Board {
             }
         }
     }
+}
+
+
+
     resetBoard(): void {
         for (let y = 0; y < 8; y++) {
             for (let x = 0; x < 8; x++) {
